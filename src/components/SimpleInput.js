@@ -1,41 +1,52 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 const SimpleInput = (props) => {
   const [enteredName, setEnteredName] = useState("");
-  const nameInputRef = useRef();
-  const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
-  const [enteredNameIsTouched, setEnteredNameIsTouched] = useState(false)
+  // const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
+  const [enteredNameIsTouched, setEnteredNameIsTouched] = useState(false);
+  
 
-  useEffect(()=>{
-    if(enteredNameIsValid) {
-      console.log("Name is valid");
-    }
-  }, [enteredNameIsValid])
+  const enteredNameIsValid = enteredName.trim() !== '';
+
+  const nameInputIsInvalid = enteredNameIsTouched && !enteredNameIsValid;
+
+  // useEffect(()=>{
+  //   if(enteredNameIsValid) {
+  //     console.log("Name is valid");
+  //   }
+  // }, [enteredNameIsValid])
 
   const nameInputChangeHandler = (event) => {
     setEnteredName(event.target.value);
+    // if((event.target.value).trim() !=='') {
+    //   setEnteredNameIsValid(true);
+    // }
   };
 
   const onBlurNameInputHandler = event => {
     setEnteredNameIsTouched(true);
-    if(enteredName.trim()===''){
-      setEnteredNameIsValid (false);
-      return;
-    }
+    // if(enteredName.trim()===''){
+    //   setEnteredNameIsValid (false);
+    // }
   }
 
   const formSubmissionHandler = (event) => {
     event.preventDefault();
     setEnteredNameIsTouched(true);
-    if(enteredName.trim()===''){
-      setEnteredNameIsValid (false);
+    // if(enteredName.trim()===''){
+    //   setEnteredNameIsValid (false);
+    //   return;
+    // }
+    if (!enteredNameIsValid) {
       return;
     }
-    console.log(nameInputRef.current.value);
+    console.log(enteredName);
+
     setEnteredName('');
+    setEnteredNameIsTouched(false);
   };
 
-  const nameInputIsInvalid = enteredNameIsTouched && !enteredNameIsValid;
+  
 
   const nameInputClasses = nameInputIsInvalid ? 
   "form-control invalid" : "form-control";
@@ -49,7 +60,6 @@ const SimpleInput = (props) => {
           id="name"
           onChange={nameInputChangeHandler}
           onBlur={onBlurNameInputHandler}
-          ref={nameInputRef}
           value={enteredName}
         />
         {nameInputIsInvalid && <p className="error-text">Name must not be empty</p>}
